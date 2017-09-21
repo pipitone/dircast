@@ -8,7 +8,7 @@ import yaml
 import mutagen
 
 
-AUDIO_MIMETYPES = {"audio/mpeg", "audio/mp4", "video/mp4"}
+AUDIO_MIMETYPES = {"audio/mpeg", "audio/mp4", "video/mp4", "audio/x-hx-aac-adts"}
 
 
 class FileMetadata(object):
@@ -51,13 +51,13 @@ def get_file_metadata(channel_url, mimetype, path):
     try:
         title = tag_info["title"][0]
     except KeyError:
-        title = path.name
+        title = path.stem
     md = FileMetadata(
         id=hashlib.sha1(title.encode()).hexdigest(),
         title=title,
         link="".join([
             channel_url,
-            str(path.relative_to(path, path.parents[0])),
+            str(path),
         ]),
         mimetype=mimetype
     )
@@ -68,8 +68,8 @@ def get_file_metadata(channel_url, mimetype, path):
 
 def find_files(channel_url, path):
     files = []
-    for child in sorted(path.iterdir()):
-        getLogger(__name__).info("checking %s", child)
+    for child in sorted([x for x in path.glob('**/*') if not x.is_dir()]):
+        getLogger(__name__).info("checking %s of type %s", child, str(type(child)))
         mimetype = guess_mimetype(child)
         is_audio = mimetype in AUDIO_MIMETYPES
         getLogger(__name__).info(
