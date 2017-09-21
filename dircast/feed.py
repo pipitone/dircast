@@ -21,6 +21,11 @@ def generate_feed(channel_dict, file_metadatas):
     fg.link(href=channel_dict["url"], rel="self")
     fg.title(channel_dict["title"])
     fg.description(channel_dict["description"])
+    
+    try: 
+        fg.podcast.itunes_image(channel_dict['image_url'])
+    except KeyError:
+        pass
 
     for file_metadata in file_metadatas:
         add_entry(fg, file_metadata)
