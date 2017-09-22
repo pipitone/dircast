@@ -1,7 +1,7 @@
 import math
 from logging import getLogger
 import hashlib
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
 
 import magic
 import yaml
@@ -19,6 +19,7 @@ class FileMetadata(object):
         self.mimetype = mimetype
         self.length = 0
         self.duration = None
+        self.date = None
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
@@ -63,6 +64,7 @@ def get_file_metadata(channel_url, mimetype, path):
     )
     md.length = path.stat().st_size
     md.duration = timedelta(seconds=round(tag_info.info.length))
+    md.date = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
     return md
 
 

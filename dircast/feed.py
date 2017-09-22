@@ -12,6 +12,7 @@ def add_entry(fg, md):
     fe.id(md.id)
     fe.title(md.title)
     fe.enclosure(md.link, str(md.length), "audio/mpeg")
+    fe.published(md.date)
     if md.duration is not None:
         fe.podcast.itunes_duration(format_itunes_duration(md.duration))
 
@@ -21,11 +22,10 @@ def generate_feed(channel_dict, file_metadatas):
     fg.link(href=channel_dict["url"], rel="self")
     fg.title(channel_dict["title"])
     fg.description(channel_dict["description"])
+    fg.author(channel_dict.get("author", None))
     
-    try: 
-        fg.podcast.itunes_image(channel_dict['image_url'])
-    except KeyError:
-        pass
+    fg.podcast.itunes_image(channel_dict.get('image_url', None))
+    fg.podcast.itunes_category(channel_dict.get('category', None))
 
     for file_metadata in file_metadatas:
         add_entry(fg, file_metadata)
