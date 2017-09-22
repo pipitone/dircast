@@ -19,7 +19,7 @@ classifiers=[
 setup(
     name="dircast",
     version="0.0",
-    desciption=" Create a podcast RSS feed for a directory of audio files",
+    description=" Create a podcast RSS feed for a directory of audio files",
     url="https://github.com/calpaterson/dircast",
     maintainer="Cal Paterson",
     license="GPL",
