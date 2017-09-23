@@ -2,6 +2,7 @@ import math
 from logging import getLogger
 import hashlib
 from datetime import timedelta, datetime, timezone
+from urllib.parse import quote, urljoin
 
 import magic
 import yaml
@@ -56,10 +57,7 @@ def get_file_metadata(channel_url, mimetype, path):
     md = FileMetadata(
         id=hashlib.sha1(title.encode()).hexdigest(),
         title=title,
-        link="".join([
-            channel_url,
-            str(path),
-        ]),
+        link=urljoin(channel_url, quote(str(path))),
         mimetype=mimetype
     )
     md.length = path.stat().st_size
