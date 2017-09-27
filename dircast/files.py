@@ -71,7 +71,7 @@ def get_file_metadata(channel_url, mimetype, path):
         pass
 
     try:
-        md.date = dateutil.parser(tag_info["date"][0])
+        md.date = dateutil.parser.parse(tag_info["date"][0])
     except KeyError: 
         md.date = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
 
