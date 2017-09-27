@@ -7,6 +7,7 @@ from urllib.parse import quote, urljoin
 import magic
 import yaml
 import mutagen
+import dateutil
 
 
 AUDIO_MIMETYPES = {"audio/mpeg", "audio/mp4", "video/mp4", "audio/x-hx-aac-adts"}
@@ -21,6 +22,7 @@ class FileMetadata(object):
         self.length = 0
         self.duration = None
         self.date = None
+        self.description = None
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
@@ -62,7 +64,17 @@ def get_file_metadata(channel_url, mimetype, path):
     )
     md.length = path.stat().st_size
     md.duration = timedelta(seconds=round(tag_info.info.length))
-    md.date = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
+    
+    try: 
+        md.description = tag_info["description"][0]
+    except KeyError:
+        pass
+
+    try:
+        md.date = dateutil.parser(tag_info["date"][0])
+    except KeyError: 
+        md.date = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
+
     return md
 
 

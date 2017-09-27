@@ -4,3 +4,4 @@ pyyaml
 feedgen
 python-magic
 pathlib
+python-dateutil

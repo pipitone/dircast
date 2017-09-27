@@ -15,6 +15,8 @@ def add_entry(fg, md):
     fe.published(md.date)
     if md.duration is not None:
         fe.podcast.itunes_duration(format_itunes_duration(md.duration))
+    if md.description is not None:
+        fe.description(md.description)
 
 def generate_feed(channel_dict, file_metadatas):
     fg = FeedGenerator()
