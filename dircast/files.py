@@ -1,13 +1,14 @@
 import math
 from logging import getLogger
 import hashlib
-from datetime import timedelta, datetime, timezone
+from datetime import timedelta, datetime
 from urllib.parse import quote, urljoin
 
 import magic
 import yaml
 import mutagen
 import dateutil
+import pytz
 
 
 AUDIO_MIMETYPES = {"audio/mpeg", "audio/mp4", "video/mp4", "audio/x-hx-aac-adts"}
@@ -73,7 +74,10 @@ def get_file_metadata(channel_url, mimetype, path):
     try:
         md.date = dateutil.parser.parse(tag_info["date"][0])
     except KeyError: 
-        md.date = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc)
+        md.date = datetime.utcfromtimestamp(path.stat().st_mtime)
+
+    # just in case
+    md.date = pytz.utc.localize(md.date)
 
     return md
 
